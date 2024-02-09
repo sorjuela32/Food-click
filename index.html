@@ -1,1 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food-Click</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+    position: relative;
+  }
+  header {
+    background-color: #ff5a5f;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+  }
+  h1 {
+    margin: 0;
+    font-size: 32px;
+  }
+  h2 {
+    margin: 5px 0;
+    font-size: 20px;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center;
+    
+  }
+  .search-bar {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .search-bar input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: initial;
+  }
+  .category-list {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .category-item {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    background-color: #ff8b8e;
+    color: #fff;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  .category-item:hover {
+    background-color: #ff5a5f;
+  }
+  .menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
+  .menu-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  }
+  .menu-item img {
+    width: 100%;
+    height: 150px; /* Establece la altura deseada para todas las imágenes */
+    object-fit: cover; /* Para mantener la relación de aspecto */
+    border-radius: 5px; /* Agrega borde redondeado */
+  }
+  .menu-item h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #ff5a5f;
+    border-radius: 0 0 5px 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .menu-item p {
+    margin: 5px 0 0;
+    font-size: 16px;
+    color: #777;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.9);
+  }
+
+  .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    max-height: 80%;
+  }
+
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .pay-button {
+    padding: 10px 20px;
+    background-color: #ad1217;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: inherit;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .pay-button:hover {
+    background-color: #ff2a2f;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Food-Click</h1>
+  <h2>Todo lo que quieras comer a un clic</h2>
+</header>
+
+<div class="container">
+  <div class="search-bar">
+    <input type="text" placeholder="Buscar comida..." id="searchInput">
+  </div>
+
+  <div class="category-list">
+    <div class="category-item">Pizza</div>
+    <div class="category-item">Hamburguesa</div>
+    <div class="category-item">Sushi</div>
+    <div class="category-item">Pasta</div>
+    <div class="category-item">Sandwich</div>
+    <div class="category-item">Arroz</div>
+  </div>
+
+  <div class="menu">
+    <div class="menu-item" data-category="Pizza" data-price="25000" data-ingredients="Tomate, queso, pepperoni" data-calories="300" data-protein="15" data-size="25cm">
+      <img src="https://images.ctfassets.net/n7hs0hadu6ro/7cYJRDYk9p5kcLDzodLAtD/99866aedbbfc44cede440507e7d3ee20/Pizza_de_pepperoni_al_horno.png?w=1024&h=683&fl=progressive&q=50&fm=jpg" alt="Pizza">
+      <h3>Pizza de pepperoni</h3>
+      <p>$25.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pizza" data-price="26000" data-ingredients="Queso mozzarella, queso cheddar, queso parmesano, queso azul" data-calories="320" data-protein="14" data-size="25cm">
+      <img src="https://www.comedera.com/wp-content/uploads/2022/04/Pizza-cuatro-quesos-shutterstock_1514858234.jpg" alt="Pizza cuatro quesos">
+      <h3>Pizza cuatro quesos</h3>
+      <p>$26.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pizza" data-price="24000" data-ingredients="Tomate, mozzarella, jamón, champiñones, alcachofas, aceitunas" data-calories="290" data-protein="16" data-size="25cm">
+      <img src="https://estaticos-cdn.prensaiberica.es/clip/1353b634-c81f-45de-98bb-c52f4df0c2ba_16-9-aspect-ratio_default_0.jpg" alt="Pizza cuatro estaciones">
+      <h3>Pizza cuatro estaciones</h3>
+      <p>$24.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pizza" data-price="23000" data-ingredients="Tomate, queso mozzarella, champiñones, pollo desmechado" data-calories="280" data-protein="13" data-size="25cm">
+      <img src="https://www.pizzaspiccolo.com.co//wp-content/uploads/2020/07/020-POLLOCHAMPI-1.jpg" alt="Pizza con champiñones">
+      <h3>Pizza pollo con champiñones</h3>
+      <p>$23.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pizza" data-price="27000" data-ingredients="Tomate, mozzarella, jamón, piña" data-calories="310" data-protein="12">
+      <img src="https://images.hola.com/imagenes/cocina/recetas/20200120158504/pizza-hawaiana-o-pizza-tropical/0-770-827/pizza-hawaiana-t.jpg" alt="Pizza hawaiana" data-size="25cm">
+      <h3>Pizza hawaiana</h3>
+      <p>$27.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pizza" data-price="22000" data-ingredients="Tomate, ajo, orégano, albahaca" data-calories="270" data-protein="11" data-size="25cm">
+      <img src="https://au.gozney.com/cdn/shop/articles/IMG_5964-2-2000x1125.jpg?v=1630506228" alt="Pizza marinara">
+      <h3>Pizza marinara</h3>
+      <p>$22.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pizza" data-price="25000" data-ingredients="Tomate, mozzarella, tomate, albahaca, orégano," data-calories="300" data-protein="15" data-size="25cm">
+      <img src="https://www.clarin.com/img/2022/02/02/xqwJySBdj_1200x630__1.jpg" alt="Pizza napolitana">
+      <h3>Pizza napolitana</h3>
+      <p>$25.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Hamburguesa" data-price="20000" data-ingredients="Carne de res, lechuga, tomate, queso, cebolla, pan" data-calories="500" data-protein="20">
+      <img src="https://www.elcorral.com/img/our-cart/el-corral-hamburguesas-corralita..png" alt="Hamburguesa">
+      <h3>Hamburguesa clasica</h3>
+      <p>$20.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Hamburguesa" data-price="20000" data-ingredients="pechuga de pollo a la plancha, lechuga, tomate, queso, cebolla, pan" data-calories="400" data-protein="15">
+      <img src="https://www.elcorral.com/img/our-cart/el-corral-hamburguesas-corral-pollo..png" alt="Hamburguesa">
+      <h3>Hamburguesa de pollo</h3>
+      <p>$25.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Hamburguesa" data-price="20000" data-ingredients="Carne de res x2, lechuga, tomate, tocineta, queso, cebolla, pan" data-calories="650" data-protein="40">
+      <img src="https://www.elcorral.com/img/our-cart/el-corral-hamburguesas-doble-doble..png" alt="Hamburguesa">
+      <h3>Hamburguesa doble</h3>
+      <p>$35.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Hamburguesa" data-price="20000" data-ingredients="pechuga de pollo a la parrilla con BBQ, lechuga, tomate, queso, cebolla, pan" data-calories="450" data-protein="15">
+      <img src="https://www.elcorral.com/img/our-cart/el-corral-hamburguesas-corralisima-pollo-parrillero..jpeg" alt="Hamburguesa">
+      <h3>Hamburguesa de pollo a la parrilla</h3>
+      <p>$30.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Sushi" data-price="30000" data-ingredients="Arroz, pescado crudo, aguacate, alga nori" data-calories="100" data-protein="14">
+      <img src="https://i.pinimg.com/originals/fc/2e/78/fc2e78b38493e90047a24e0ec4184ba0.jpg" alt="Sushi">
+      <h3>Sushi Uramaki</h3>
+      <p>$30.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Sushi" data-price="30000" data-ingredients="Arroz, pescado crudo, aguacate, alga nori" data-calories="120" data-protein="12">
+      <img src="https://www.orientalmarket.es/wp-content/uploads/2021/09/temaki-de-sushi.jpg" alt="Sushi">
+      <h3>Sushi Temaki</h3>
+      <p>$30.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Sushi" data-price="30000" data-ingredients="Arroz, pescado crudo, aguacate, alga nori" data-calories="100" data-protein="10">
+      <img src="https://images-gmi-pmc.edge-generalmills.com/d1584f73-4865-4b8b-b3e5-7f9ca741366f.jpg" alt="Sushi">
+      <h3>Sushi Nigiri</h3>
+      <p>$30.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pasta" data-price="27000" data-ingredients="Pasta, yema de huevo,tocineta, queso parmesano, pimienta" data-calories="325" data-protein="10">
+      <img src="https://images.hola.com/imagenes/cocina/recetas/20210406187270/espaguetis-a-la-carbonara/0-937-658/espagueti-carbonara-t.jpg?tx=w_1200" alt="Pasta">
+      <h3>Espaguetis a la carbonara</h3>
+      <p>$30.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pasta" data-price="27000" data-ingredients="Pasta,carne molida, salsa de tomate, zanahoria, pimienta" data-calories="350" data-protein="20">
+      <img src="https://images.hola.com/imagenes/cocina/recetas/20200122158722/espagueti-a-la-bolonesa/0-815-453/espagueti-bolognesa-t.jpg?tx=w_1200" alt="Pasta">
+      <h3>Espaguetis a la boloñesa</h3>
+      <p>$35.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Pasta" data-price="27000" data-ingredients="Pasta, ajo, guindilla, aceite de oliva, perejil" data-calories="200" data-protein="5">
+      <img src="https://images.hola.com/imagenes/cocina/recetas/20210413187685/pasta-aglio-e-olio/0-940-104/aglio-e-oglio-adobe-t.jpg?tx=w_1200" alt="Pasta">
+      <h3>Espaguetis'aglio e olio'</h3>
+      <p>$28.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Sandwich" data-price="18000" data-ingredients="Pan, limon, mayonesa, atún, cilantro, cebolla" data-calories="200" data-protein="22">
+      <img src="https://cdn0.recetasgratis.net/es/posts/2/7/9/sandwich_de_atun_ligth_28972_600_square.jpg" alt="Sandwich">
+      <h3>Sándwich de atún</h3>
+      <p>$20.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Sandwich" data-price="18000" data-ingredients="Pan, jamón, queso, salami, pepinillo, mostaza" data-calories="350" data-protein="25">
+      <img src="https://www.eltiempo.com/files/article_main_1200/uploads/2023/07/04/64a4aac0e67a9.jpeg">
+      <h3>Sándwich cubano</h3>
+      <p>$25.000 COP</p>
+    </div>
+    <div class="menu-item" data-category="Arroz" data-price="15000" data-ingredients="Arroz, verduras, pollo" data-calories="300" data-protein="12">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpJDdA5ac1nA9oOi8Gq1dBRyyQql34gcd7hA&usqp=CAU" alt="Arroz">
+      <h3>Arroz con pollo</h3>
+      <p>$15.000 COP</p>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImg">
+    <button class="pay-button" id="payButton">Pagar</button>
+  </div>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const menuItems = document.querySelectorAll('.menu-item');
+  const menuDropdown = document.getElementById('menuDropdown');
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  const payButton = document.getElementById('payButton');
+
+  // Función para mostrar el modal con la imagen ampliada
+  function showModal(imgSrc) {
+    modal.style.display = 'block';
+    modalImg.src = imgSrc;
+    }
+
+  // Ocultar el modal al hacer clic en el botón de cerrar
+  modal.querySelector('.close').addEventListener('click', function() {
+    modal.style.display = 'none';
+  })
+
+  payButton.addEventListener('click', function() {
+    // Agregar aquí la lógica para realizar el pago
+    alert('Gracias por tu compra!');
+    modal.style.display = 'none'; // Ocultar el modal después de realizar el pago
+  });
+
+  searchInput.addEventListener('input', function() {
+    const searchText = this.value.toLowerCase();
+
+    menuItems.forEach(item => {
+      const menuItemText = item.textContent.toLowerCase();
+      const isMatch = menuItemText.includes(searchText);
+      item.style.display = isMatch ? 'block' : 'none';
+    });
+  });
+  
+  menuItems.forEach(item => {
+    item.addEventListener('click', function() {
+      const imgSrc = this.querySelector('img').src;
+      showModal(imgSrc);
+      const price = this.getAttribute('data-price');
+      const ingredients = this.getAttribute('data-ingredients');
+      const calories = this.getAttribute('data-calories');
+      const protein = this.getAttribute('data-protein');
+      const size = this.getAttribute('data-size');
+      
+      alert(`Precio: $${price} COP\nIngredientes: ${ingredients}\nCalorías: ${calories}\nProteína: ${protein}\ntamaño: ${size}`);
+    });
+  
+
+  menuDropdown.addEventListener('change', function() {
+    const selectedItem = this.value;
+    menuItems.forEach(item => {
+      if (item.querySelector('h3').textContent === selectedItem) {
+        const price = item.getAttribute('data-price');
+        const ingredients = item.getAttribute('data-ingredients');
+        const calories = item.getAttribute('data-calories');
+        const protein = item.getAttribute('data-protein');
+        const size = this.getAttribute('data-size');
+        
+        alert(`Precio: $${price} COP\nIngredientes: ${ingredients}\nCalorías: ${calories}\nProteína: ${protein}\ntamaño: ${size}`);
+      }
+    });
+
+        menuItems.forEach(item => {
+          const option = document.createElement('option');
+          option.textContent = item.querySelector('h3').textContent;
+          option.value = item.querySelector('h3').textContent;
+          menuDropdown.appendChild(option);
+      });
+    });
+  })
+</script>
+
+</body>
+</html>
 
